@@ -1,0 +1,22 @@
+version: "3.9"
+services:
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: koah
+      POSTGRES_USER: koah
+      POSTGRES_PASSWORD: koah_dev_pw
+    ports:
+      - "5432:5432"
+    volumes:
+      - koah_pgdata:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+
+volumes:
+  koah_pgdata:
