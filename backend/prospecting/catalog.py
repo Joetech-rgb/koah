@@ -1,0 +1,52 @@
+CATALOG = [
+    {"offer": "Website + Google Business setup", "fits": "any organization with no website"},
+    {"offer": "Website redesign + Google SEO", "fits": "organizations with an old or weak website"},
+    {"offer": "AI automation (customer chat bots, WhatsApp/booking/order handling, workflows)", "fits": "restaurants, salons, clinics, hotels, shops, most businesses"},
+    {"offer": "Custom software / internal tools / dashboards", "fits": "any organization with manual processes"},
+    {"offer": "POS system", "fits": "restaurants, supermarkets, shops, pharmacies, car washes"},
+    {"offer": "Delivery / rider tracking", "fits": "restaurants, pharmacies, shops with delivery"},
+    {"offer": "School management system", "fits": "schools, colleges, training centers"},
+    {"offer": "Church / member management + online giving", "fits": "churches, ministries"},
+    {"offer": "Hospital/clinic appointment + patient records system", "fits": "hospitals, clinics, pharmacies"},
+    {"offer": "IT hardware: laptops, Wi-Fi routers, networking, CCTV", "fits": "schools, offices, hospitals, hotels, any organization with staff"},
+]
+
+BROAD_NICHES = [
+    "restaurants", "car washes", "schools", "churches", "hospitals", "clinics",
+    "supermarkets", "pharmacies", "hotels", "salons", "logistics companies",
+    "real estate agencies", "petrol stations", "banks and microfinance", "warehouses",
+]
+
+NICHE_PLAYBOOKS = {
+    "restaurants": "WhatsApp ordering agent, table reservations, menu assistant, order and rider tracking.",
+    "retail shops": "Product inquiries, stock questions, order taking, follow-up with leads who did not buy.",
+    "repair shops": "Customer intake, diagnosis questions, quotations, appointment booking, repair status updates.",
+    "real estate agencies": "Property-matching chatbot, lead qualification, viewing bookings, follow-ups.",
+    "interior design studios": "Client brief collection, quotation requests, consultation booking, project updates.",
+    "car dealerships": "Vehicle inquiries, financing questions, lead qualification, test-drive booking.",
+    "auto repair garages": "Service booking, vehicle intake, maintenance reminders, quotation requests.",
+    "hair salons and barbers": "Booking, service recommendations, appointment reminders, customer follow-up.",
+    "gyms and fitness centers": "Membership inquiries, trial booking, payment reminders, FAQs.",
+    "private schools": "Admissions chatbot, parent inquiries, fee information, application intake. A school management system also fits.",
+    "hotels": "Booking inquiries, FAQs, concierge, WhatsApp reservations. Networking equipment may fit.",
+    "property management companies": "Tenant requests, maintenance tickets, rent reminders, lead handling.",
+    "clinics": "Appointment requests, FAQs, reminders and patient intake forms. Pitch bookings and intake only; make no claims about handling patient data.",
+    "law firms": "Lead intake, consultation booking, document collection, follow-up. Make no claims about handling client-confidential data.",
+    "accounting firms": "Client onboarding, document collection, appointment scheduling.",
+    "training centers": "Course inquiries, enrollment, payment reminders, student support.",
+    "event and wedding planners": "Quote generation, package inquiries, booking and follow-up.",
+    "photographers": "Package inquiries, availability, booking, follow-up.",
+    "construction companies": "Lead qualification, project inquiries, quotation intake, follow-ups.",
+    "furniture shops": "Product inquiries, custom-order intake, quotation requests.",
+    "wholesalers and manufacturers": "Distributor inquiries, order intake, quotations, customer support.",
+    "car washes": "Booking, loyalty and payment tracking, a POS system, customer follow-up.",
+    "churches": "Member management, online giving, a website, event announcements. Sound and Wi-Fi setup may fit.",
+    "hospitals": "Appointment booking, patient records system, network equipment. Make no claims about patient data.",
+    "supermarkets": "POS and stock tracking, delivery orders, WhatsApp ordering.",
+    "pharmacies": "POS and stock tracking, delivery orders, refill reminders.",
+    "logistics companies": "Delivery tracking, order intake, driver and dispatch tools.",
+    "petrol stations": "POS and sales tracking, loyalty, CCTV.",
+    "banks and microfinance": "Customer inquiry chatbot, loan application intake, reminders.",
+    "warehouses": "Stock tracking, order intake, dispatch tools.",
+}
+BROAD_NICHES = list(NICHE_PLAYBOOKS.keys())

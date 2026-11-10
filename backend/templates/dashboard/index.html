@@ -1,0 +1,166 @@
+﻿{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1>Good evening, Ankamah &#128075;</h1>
+    <p class="page-subtitle">Here's what's happening with your AI outreach today.</p>
+  </div>
+</div>
+
+<div class="kpi-grid">
+  <div class="kpi-card">
+    <div class="kpi-icon" style="background:#EDE8FD;color:#673DE6;">&#128202;</div>
+    <div class="kpi-body">
+      <p class="kpi-label">Businesses Found</p>
+      <p class="kpi-value">{{ kpis.businesses_found }}</p>
+      <p class="kpi-change {% if kpis.businesses_found_change >= 0 %}positive{% else %}negative{% endif %}">
+        {% if kpis.businesses_found_change >= 0 %}&#9650;{% else %}&#9660;{% endif %} {{ kpis.businesses_found_change }}% vs last 7 days
+      </p>
+    </div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-icon" style="background:#E6F0FD;color:#2563EB;">&#9993;</div>
+    <div class="kpi-body">
+      <p class="kpi-label">Emails Sent</p>
+      <p class="kpi-value">{{ kpis.emails_sent }}</p>
+      <p class="kpi-change {% if kpis.emails_sent_change >= 0 %}positive{% else %}negative{% endif %}">
+        {% if kpis.emails_sent_change >= 0 %}&#9650;{% else %}&#9660;{% endif %} {{ kpis.emails_sent_change }}% vs last 7 days
+      </p>
+    </div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-icon" style="background:#FDF3E6;color:#F59E0B;">&#8617;</div>
+    <div class="kpi-body">
+      <p class="kpi-label">Replies Received</p>
+      <p class="kpi-value">{{ kpis.replies_received }}</p>
+      <p class="kpi-change {% if kpis.replies_received_change >= 0 %}positive{% else %}negative{% endif %}">
+        {% if kpis.replies_received_change >= 0 %}&#9650;{% else %}&#9660;{% endif %} {{ kpis.replies_received_change }}% vs last 7 days
+      </p>
+    </div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-icon" style="background:#E9F9EF;color:#16A34A;">&#128101;</div>
+    <div class="kpi-body">
+      <p class="kpi-label">Interested Leads</p>
+      <p class="kpi-value">{{ kpis.interested_leads }}</p>
+      <p class="kpi-change {% if kpis.interested_leads_change >= 0 %}positive{% else %}negative{% endif %}">
+        {% if kpis.interested_leads_change >= 0 %}&#9650;{% else %}&#9660;{% endif %} {{ kpis.interested_leads_change }}% vs last 7 days
+      </p>
+    </div>
+  </div>
+</div>
+
+<div class="grid-3col">
+  <div class="card chart-card">
+    <div class="card-header">
+      <h3>Outreach Performance</h3>
+      <span class="pill">Last 7 days</span>
+    </div>
+    <canvas id="performanceChart" height="90"></canvas>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h3>AI Agent</h3>
+      <span class="status-dot {% if agent_running %}status-running{% else %}status-idle{% endif %}">
+        {% if agent_running %}Running{% else %}Idle{% endif %}
+      </span>
+    </div>
+    <p class="agent-desc">Researching businesses and preparing personalized outreach.</p>
+    <div class="agent-meta">
+      <p><strong>Last discovery</strong><br>{% if last_company %}{{ last_company.created_at|timesince }} ago{% else %}No activity yet{% endif %}</p>
+      <p><strong>Next run</strong><br>8:00 AM daily</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><h3>Quick Actions</h3></div>
+    <a href="#" class="quick-action"><span>&#128269;</span> Find Companies</a>
+    <a href="#" class="quick-action"><span>&#9654;</span> Start Campaign</a>
+    <a href="#" class="quick-action"><span>&#128202;</span> View Reports</a>
+  </div>
+</div>
+
+<div class="grid-2col">
+  <div class="card">
+    <div class="card-header"><h3>Recent Activity</h3></div>
+    <table class="data-table">
+      <thead><tr><th>Type</th><th>Details</th><th>Time</th><th>Status</th></tr></thead>
+      <tbody>
+        {% for a in recent_activity %}
+        <tr>
+          <td>{{ a.type }}</td>
+          <td>{{ a.details }}</td>
+          <td>{{ a.time|timesince }} ago</td>
+          <td><span class="badge badge-{{ a.badge }}">{{ a.status }}</span></td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4" class="empty-cell">No activity yet</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><h3>Recent Companies</h3></div>
+    <table class="data-table">
+      <thead><tr><th>Company</th><th>Industry</th><th>Country</th><th>Status</th></tr></thead>
+      <tbody>
+        {% for c in recent_companies %}
+        <tr>
+          <td>{{ c.name }}</td>
+          <td>{{ c.industry|default:"-" }}</td>
+          <td>{{ c.country|default:"-" }}</td>
+          <td><span class="badge badge-status-{{ c.status }}">{{ c.get_status_display }}</span></td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4" class="empty-cell">No companies discovered yet</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header"><h3>Recent Email Threads</h3></div>
+  <table class="data-table">
+    <thead><tr><th>Company</th><th>Subject</th><th>Status</th><th>Last Activity</th></tr></thead>
+    <tbody>
+      {% for t in recent_threads %}
+      <tr>
+        <td>{{ t.target_company.name }}</td>
+        <td>{{ t.subject }}</td>
+        <td><span class="badge badge-status-{{ t.status }}">{{ t.get_status_display }}</span></td>
+        <td>{{ t.created_at|timesince }} ago</td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="4" class="empty-cell">No email threads yet</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+<script>
+const ctx = document.getElementById('performanceChart');
+new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels: {{ chart_labels|safe }},
+    datasets: [
+      { label: 'Emails sent', data: {{ emails_series }}, borderColor: '#673DE6', backgroundColor: 'transparent', tension: 0.35 },
+      { label: 'Replies received', data: {{ replies_series }}, borderColor: '#2563EB', backgroundColor: 'transparent', tension: 0.35 },
+      { label: 'Interested leads', data: {{ interested_series }}, borderColor: '#16A34A', backgroundColor: 'transparent', tension: 0.35 }
+    ]
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { position: 'bottom', labels: { boxWidth: 8, usePointStyle: true } } },
+    scales: { y: { beginAtZero: true, grid: { color: '#F1F1F5' } }, x: { grid: { display: false } } }
+  }
+});
+</script>
+{% endblock %}

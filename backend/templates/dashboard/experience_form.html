@@ -1,0 +1,24 @@
+﻿{% extends "base.html" %}
+{% block title %}Experience{% endblock %}
+{% block content %}
+<div class="page-header"><div><h1>{% if instance %}Edit{% else %}Add{% endif %} Experience</h1></div></div>
+<div class="card form-card">
+  <form method="post">
+    {% csrf_token %}
+    <label>Company</label>
+    <input type="text" name="company" value="{{ instance.company|default:'' }}" required>
+    <label>Role</label>
+    <input type="text" name="role" value="{{ instance.role|default:'' }}" required>
+    <label>Start date</label>
+    <input type="date" name="start_date" value="{{ instance.start_date|date:'Y-m-d'|default:'' }}" required>
+    <label>End date (leave blank if current)</label>
+    <input type="date" name="end_date" value="{{ instance.end_date|date:'Y-m-d'|default:'' }}">
+    <label>Description</label>
+    <textarea name="description" rows="4" class="composer">{{ instance.description|default:'' }}</textarea>
+    <div class="form-actions">
+      <button type="submit" class="btn-primary">Save</button>
+      <a href="/jobs/profile/?tab=experience" class="btn-secondary">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

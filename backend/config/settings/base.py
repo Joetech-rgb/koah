@@ -27,6 +27,9 @@ INSTALLED_APPS = [
     'crm',
     'compliance',
     'reporting',
+    'dashboard',
+    'jobs',
+    'axes',
 ]
 
 AUTH_USER_MODEL = 'accounts.User'
@@ -38,8 +41,16 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    "dashboard.middleware.RequireLoginMiddleware",
+    'dashboard.middleware.LoginRequiredMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'axes.middleware.AxesMiddleware',
+]
+
+AUTHENTICATION_BACKENDS = [
+    'axes.backends.AxesStandaloneBackend',
+    'django.contrib.auth.backends.ModelBackend',
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -47,7 +58,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -101,6 +112,14 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
     ],
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.UserRateThrottle',
+        'rest_framework.throttling.AnonRateThrottle',
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'user': '60/min',
+        'anon': '20/min',
+    },
 }
 
 CELERY_BROKER_URL = config('REDIS_URL', default='redis://localhost:6379/0')
@@ -111,3 +130,34 @@ CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = TIME_ZONE
 
 ANTHROPIC_API_KEY = config('ANTHROPIC_API_KEY', default='')
+CORS_ALLOW_CREDENTIALS = True
+
+
+CSRF_TRUSTED_ORIGINS = ['http://localhost:5173']
+
+
+GOOGLE_SEARCH_API_KEY = config('GOOGLE_SEARCH_API_KEY', default='')
+GOOGLE_SEARCH_ENGINE_ID = config('GOOGLE_SEARCH_ENGINE_ID', default='')
+GMAIL_CLIENT_ID = config('GMAIL_CLIENT_ID', default='')
+GMAIL_CLIENT_SECRET = config('GMAIL_CLIENT_SECRET', default='')
+REPORT_RECIPIENT_EMAIL = config('REPORT_RECIPIENT_EMAIL', default='')
+SEND_RATE_LIMIT_PER_HOUR = config('SEND_RATE_LIMIT_PER_HOUR', default=30, cast=int)
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': config('REDIS_URL', default='redis://localhost:6379/0'),
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
+    }
+}
+
+
+STATICFILES_DIRS = [BASE_DIR / 'static']
+
+LOGIN_URL = "login"
+LOGIN_REDIRECT_URL = "dashboard"
+
+MEDIA_URL = "media/"
+MEDIA_ROOT = BASE_DIR / "media"

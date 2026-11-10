@@ -1,0 +1,67 @@
+﻿{% extends "base.html" %}
+{% block title %}Products{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div><h1>Products</h1><p class="page-subtitle">Manage what KoahCloud offers and has delivered.</p></div>
+  {% if tab == "products" %}<a href="{% url 'product_add' %}" class="btn-primary">+ Add Product</a>
+  {% elif tab == "services" %}<a href="{% url 'service_add' %}" class="btn-primary">+ Add Service</a>
+  {% else %}<a href="{% url 'portfolio_add' %}" class="btn-primary">+ Add Portfolio Item</a>{% endif %}
+</div>
+
+<div class="tabs">
+  <a href="?tab=products" class="tab {% if tab == 'products' %}active{% endif %}">Products <span>{{ products.count }}</span></a>
+  <a href="?tab=services" class="tab {% if tab == 'services' %}active{% endif %}">Services <span>{{ services.count }}</span></a>
+  <a href="?tab=portfolio" class="tab {% if tab == 'portfolio' %}active{% endif %}">Portfolio <span>{{ portfolio_items.count }}</span></a>
+</div>
+
+<div class="card">
+{% if tab == "products" %}
+  <table class="data-table">
+    <thead><tr><th>Name</th><th>Description</th><th>Price Note</th><th>Status</th><th></th></tr></thead>
+    <tbody>
+      {% for p in products %}
+      <tr>
+        <td>{{ p.name }}</td><td>{{ p.description|truncatewords:15 }}</td><td>{{ p.price_note|default:"-" }}</td>
+        <td><span class="badge {% if p.is_active %}badge-success{% else %}badge-status-closed{% endif %}">{% if p.is_active %}Active{% else %}Disabled{% endif %}</span></td>
+        <td>
+          <a href="{% url 'product_edit' p.pk %}" class="btn-link">Edit</a>
+          <a href="{% url 'product_toggle' p.pk %}" class="btn-link">{% if p.is_active %}Disable{% else %}Enable{% endif %}</a>
+          <a href="{% url 'product_delete' p.pk %}" class="btn-link" style="color:var(--error)" onclick="return confirm('Delete this product?');">Delete</a>
+        </td>
+      </tr>
+      {% empty %}<tr><td colspan="5" class="empty-cell">No products yet</td></tr>{% endfor %}
+    </tbody>
+  </table>
+{% elif tab == "services" %}
+  <table class="data-table">
+    <thead><tr><th>Name</th><th>Description</th><th>Target Signal</th><th>Status</th><th></th></tr></thead>
+    <tbody>
+      {% for s in services %}
+      <tr>
+        <td>{{ s.name }}</td><td>{{ s.description|truncatewords:15 }}</td><td>{{ s.target_signal|default:"-" }}</td>
+        <td><span class="badge {% if s.is_active %}badge-success{% else %}badge-status-closed{% endif %}">{% if s.is_active %}Active{% else %}Disabled{% endif %}</span></td>
+        <td>
+          <a href="{% url 'service_edit' s.pk %}" class="btn-link">Edit</a>
+          <a href="{% url 'service_toggle' s.pk %}" class="btn-link">{% if s.is_active %}Disable{% else %}Enable{% endif %}</a>
+          <a href="{% url 'service_delete' s.pk %}" class="btn-link" style="color:var(--error)" onclick="return confirm('Delete this service?');">Delete</a>
+        </td>
+      </tr>
+      {% empty %}<tr><td colspan="5" class="empty-cell">No services yet</td></tr>{% endfor %}
+    </tbody>
+  </table>
+{% else %}
+  <div class="portfolio-grid">
+    {% for item in portfolio_items %}
+    <div class="portfolio-card">
+      <h4>{{ item.title }}</h4>
+      <p>{{ item.summary|truncatewords:25 }}</p>
+      <div class="portfolio-actions">
+        <a href="{% url 'portfolio_edit' item.pk %}" class="btn-link">Edit</a>
+        <a href="{% url 'portfolio_delete' item.pk %}" class="btn-link" style="color:var(--error)" onclick="return confirm('Delete this portfolio item?');">Delete</a>
+      </div>
+    </div>
+    {% empty %}<p class="empty-cell">No portfolio items yet</p>{% endfor %}
+  </div>
+{% endif %}
+</div>
+{% endblock %}

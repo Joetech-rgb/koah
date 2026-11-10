@@ -1,0 +1,29 @@
+﻿{% extends "base.html" %}
+{% block title %}Prospecting{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div><h1>Prospecting</h1><p class="page-subtitle">Target niches and regions the AI discovers businesses from.</p></div>
+  <a href="{% url 'niche_add' %}" class="btn-primary">+ Add Niche</a>
+</div>
+
+<div class="kpi-grid">
+  <div class="mini-stat"><p class="mini-label">Active Niches</p><p class="mini-value">{{ active_count }}</p></div>
+  <div class="mini-stat"><p class="mini-label">Total Niches</p><p class="mini-value">{{ niches.count }}</p></div>
+  <div class="mini-stat"><p class="mini-label">Companies Discovered</p><p class="mini-value">{{ total_companies }}</p></div>
+</div>
+
+<div class="portfolio-grid">
+  {% for n in niches %}
+  <div class="portfolio-card">
+    <h4>{{ n.niche_name }}</h4>
+    <p>{{ n.region }}</p>
+    <span class="badge {% if n.active %}badge-success{% else %}badge-status-closed{% endif %}">{% if n.active %}Active{% else %}Inactive{% endif %}</span>
+    <div class="portfolio-actions" style="margin-top:10px;">
+      <a href="{% url 'niche_edit' n.pk %}" class="btn-link">Edit</a>
+      <a href="{% url 'niche_toggle' n.pk %}" class="btn-link">{% if n.active %}Disable{% else %}Enable{% endif %}</a>
+      <a href="{% url 'niche_delete' n.pk %}" class="btn-link" style="color:var(--error)" onclick="return confirm('Remove this niche?');">Delete</a>
+    </div>
+  </div>
+  {% empty %}<p class="empty-cell">No niches configured yet</p>{% endfor %}
+</div>
+{% endblock %}

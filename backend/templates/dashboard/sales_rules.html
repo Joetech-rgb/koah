@@ -1,0 +1,19 @@
+﻿{% extends "base.html" %}
+{% block title %}Sales Rules{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div><h1>Sales Rules</h1><p class="page-subtitle">Standing instructions the AI must always follow when drafting pitches.</p></div>
+  <a href="{% url 'sales_rule_add' %}" class="btn-primary">+ Add Rule</a>
+</div>
+<div class="card">
+  {% for r in rules %}
+  <div class="rule-row">
+    <p>{{ r.rule_text }}</p>
+    <div class="rule-actions">
+      <a href="{% url 'sales_rule_edit' r.pk %}" class="btn-link">Edit</a>
+      <a href="{% url 'sales_rule_delete' r.pk %}" class="btn-link" style="color:var(--error)" onclick="return confirm('Delete this rule?');">Delete</a>
+    </div>
+  </div>
+  {% empty %}<p class="empty-cell">No sales rules yet.</p>{% endfor %}
+</div>
+{% endblock %}

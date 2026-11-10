@@ -8,3 +8,17 @@ node_modules/
 __pycache__/
 .vscode/
 *.log
+backend/gmail_token.json
+backend/media/
+backend/celerybeat-schedule
+backend/koah_dump.txt
+*.bak
+*.bak*
+backend/apply_fixes*.py
+backend/gmail_token.json
+backend/media/
+backend/celerybeat-schedule
+backend/koah_dump.txt
+*.bak
+*.bak*
+backend/apply_fixes*.py

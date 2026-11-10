@@ -1,0 +1,178 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KoahCloud - AI Business Development Agent</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/app.css' %}?v=19">
+<link rel="stylesheet" href="{% static 'css/neumorphism.css' %}?v=19">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23673DE6' stroke-width='2'%3E%3Cpath d='M17.5 19H9a5 5 0 1 1 1.4-9.8A6 6 0 0 1 22 11.5a4.5 4.5 0 0 1-.5 7.5'/%3E%3C/svg%3E">
+</head>
+<body class="landing-body">
+
+<nav class="landing-nav">
+  <div class="landing-logo-block">
+    <svg class="logo-svg" viewBox="0 0 24 24" fill="none" stroke="#673DE6" stroke-width="2"><path d="M17.5 19H9a5 5 0 1 1 1.4-9.8A6 6 0 0 1 22 11.5a4.5 4.5 0 0 1-.5 7.5"/></svg>
+    <div><div class="logo-text">KoahCloud</div><div class="logo-sub">AI Business Development Agent</div></div>
+  </div>
+  <div class="landing-nav-center">
+    <a href="#">Product</a>
+    <a href="#">Solutions</a>
+    <a href="#">How it works</a>
+    <a href="#">Pricing</a>
+    <a href="#">Resources</a>
+  </div>
+  <div class="landing-nav-links">
+    <a href="{% url 'login' %}">Log in</a>
+    <a href="{% url 'login' %}" class="btn-primary">Get Started Free &rarr;</a>
+  </div>
+  <button class="mobile-nav-btn" id="mobileNavBtn" aria-label="Menu">&#9776;</button>
+</nav>
+
+<div class="mobile-nav-drawer" id="mobileNavDrawer">
+  <a href="#">Product</a>
+  <a href="#">Solutions</a>
+  <a href="#">How it works</a>
+  <a href="#">Pricing</a>
+  <a href="#">Resources</a>
+  <a href="{% url 'login' %}">Log in</a>
+  <a href="{% url 'login' %}" class="btn-primary" style="text-align:center;">Get Started Free</a>
+</div>
+
+<section class="hero2">
+  <div class="hero2-text">
+    <span class="hero-badge">AI-Powered &bull; Automate &bull; Grow</span>
+    <h1>Turn opportunities<br>into action <span class="purple-highlight">with AI.</span></h1>
+    <p>KoahCloud helps you discover businesses, research opportunities, automate outreach, and manage your growth &mdash; all from one intelligent workspace.</p>
+    <div class="hero-actions">
+      <a href="{% url 'login' %}" class="btn-primary btn-lg">Get Started Free &rarr;</a>
+      <a href="#features" class="btn-secondary btn-lg">&#9654; Watch Demo</a>
+    </div>
+    <div class="hero-checks">
+      <span>&#10003; No credit card required</span>
+      <span>&#10003; Setup in minutes</span>
+      <span>&#10003; Built for growth</span>
+    </div>
+  </div>
+
+  <div class="hero2-visual">
+    <div class="fd2">
+      <div class="fd2-sidebar">
+        <div class="fd2-logo"><svg class="logo-svg" viewBox="0 0 24 24" fill="none" stroke="#673DE6" stroke-width="2"><path d="M17.5 19H9a5 5 0 1 1 1.4-9.8A6 6 0 0 1 22 11.5a4.5 4.5 0 0 1-.5 7.5"/></svg>KoahCloud</div>
+        <div class="fd2-nav-item active">Dashboard</div>
+        <div class="fd2-nav-item">Companies</div>
+        <div class="fd2-nav-item">Research</div>
+        <div class="fd2-nav-item">Outreach</div>
+        <div class="fd2-nav-item">Reports</div>
+        <div class="fd2-nav-item">Settings</div>
+      </div>
+      <div class="fd2-main">
+        <div class="fd2-topbar">
+          <span class="fd2-search">Search companies, domains, or anything...</span>
+          <span class="fd2-avatar">A</span>
+        </div>
+        <div class="fd2-greeting">Good evening, Ankamah &#128075;</div>
+        <div class="fd2-kpis">
+          <div class="fd2-kpi"><span class="fd2-kpi-label">Businesses Found</span><span class="fd2-kpi-value">48</span><span class="fd2-kpi-change">&#9650; 33%</span></div>
+          <div class="fd2-kpi"><span class="fd2-kpi-label">Emails Sent</span><span class="fd2-kpi-value">32</span><span class="fd2-kpi-change">&#9650; 45%</span></div>
+          <div class="fd2-kpi"><span class="fd2-kpi-label">Replies Received</span><span class="fd2-kpi-value">9</span><span class="fd2-kpi-change">&#9650; 80%</span></div>
+          <div class="fd2-kpi"><span class="fd2-kpi-label">Interested Leads</span><span class="fd2-kpi-value">4</span><span class="fd2-kpi-change">&#9650; 100%</span></div>
+        </div>
+        <div class="fd2-bottom">
+          <div class="fd2-chart-card">
+            <span class="fd2-card-title">Outreach Performance</span>
+            <svg viewBox="0 0 260 70" class="fd2-chart-svg" preserveAspectRatio="none">
+              <polyline points="0,50 35,45 70,48 105,30 140,32 175,15 210,18 245,10" fill="none" stroke="#673DE6" stroke-width="2"/>
+              <polyline points="0,60 35,58 70,55 105,52 140,50 175,48 210,45 245,42" fill="none" stroke="#2563EB" stroke-width="2"/>
+            </svg>
+          </div>
+          <div class="fd2-agent-card">
+            <span class="fd2-card-title">AI Agent <span class="fd2-running">&#9679; Running</span></span>
+            <p class="fd2-agent-text">Researching businesses and preparing personalized outreach.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="what-section" id="features">
+  <span class="section-label">WHAT KOAHCLOUD DOES</span>
+  <h2>One platform. Multiple possibilities.</h2>
+  <p class="section-sub2">Everything you need to find opportunities, engage with the right people, and grow your business &mdash; powered by AI.</p>
+
+  <div class="what-grid">
+    <div class="what-item">
+      <div class="what-icon">&#128269;</div>
+      <h3>Discover</h3>
+      <p>Find businesses and opportunities that match your target.</p>
+    </div>
+    <div class="what-item">
+      <div class="what-icon">&#128196;</div>
+      <h3>Research</h3>
+      <p>Let AI analyze companies, industries, websites and technologies.</p>
+    </div>
+    <div class="what-item">
+      <div class="what-icon">&#9993;</div>
+      <h3>Engage</h3>
+      <p>Create personalized outreach based on real company research.</p>
+    </div>
+    <div class="what-item">
+      <div class="what-icon">&#9881;</div>
+      <h3>Automate</h3>
+      <p>Let your AI agent handle repetitive discovery, research and follow-ups.</p>
+    </div>
+  </div>
+</section>
+
+<section class="pitch-section">
+  <div class="pitch-inner">
+    <span class="section-label">HOW IT WORKS FOR YOU</span>
+    <h2>We pitch. You close.</h2>
+    <p class="section-sub2">KoahCloud writes and sends the outreach, tracks every reply, and reports back honestly - so you always know exactly where things stand.</p>
+    <div class="pitch-grid">
+      <div class="pitch-item">
+        <div class="what-icon">&#9993;</div>
+        <h3>We pitch for you</h3>
+        <p>Every message is personalized to the company it's going to - not a generic template.</p>
+      </div>
+      <div class="pitch-item">
+        <div class="what-icon">&#9203;</div>
+        <h3>Daily feedback, close of day</h3>
+        <p>A digest lands in your inbox every evening: what was found, sent, and who replied.</p>
+      </div>
+      <div class="pitch-item">
+        <div class="what-icon">&#128274;</div>
+        <h3>Honest, not inflated</h3>
+        <p>No fabricated numbers. If nothing happened today, the report says so.</p>
+      </div>
+      <div class="pitch-item">
+        <div class="what-icon">&#127942;</div>
+        <h3>You focus on closing</h3>
+        <p>By the time a lead reaches you, they're already warm - the groundwork is done.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="trust-strip">
+  <p>Trusted by growing businesses and professionals</p>
+</section>
+
+<footer class="landing-footer2">
+  <div class="footer-bottom">
+    <span>&copy; {% now "Y" %} KoahCloud</span>
+    <div class="footer-legal"><a href="#">Privacy</a><a href="#">Terms</a></div>
+  </div>
+</footer>
+
+<script>
+document.getElementById('mobileNavBtn').addEventListener('click', function () {
+  document.getElementById('mobileNavDrawer').classList.toggle('open');
+});
+</script>
+</body>
+</html>

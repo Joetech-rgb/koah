@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+{% block title %}Jobs{% endblock %}
+{% block content %}
+<div class="page-header"><div><h1>Jobs</h1><p class="page-subtitle">Your candidate profile and AI-assisted job search.</p></div></div>
+
+<div class="tabs">
+  <a href="?tab=profile" class="tab {% if tab == 'profile' %}active{% endif %}">Profile</a>
+  <a href="?tab=skills" class="tab {% if tab == 'skills' %}active{% endif %}">Skills <span>{{ skills.count }}</span></a>
+  <a href="?tab=experience" class="tab {% if tab == 'experience' %}active{% endif %}">Experience <span>{{ experiences.count }}</span></a>
+  <a href="?tab=listings" class="tab {% if tab == 'listings' %}active{% endif %}">Job Listings <span>{{ job_listings|length }}</span></a>
+  <a href="?tab=config" class="tab {% if tab == 'config' %}active{% endif %}">Search Config <span>{{ job_configs.count }}</span></a>
+</div>
+
+{% if messages %}{% for m in messages %}<div class="alert-success">{{ m }}</div>{% endfor %}{% endif %}
+
+{% if tab == "profile" %}
+<div class="card form-card" style="max-width:600px;">
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <label>Professional summary</label>
+    <textarea name="summary" rows="4" class="composer" placeholder="e.g. Backend developer with 4 years experience in Django and Python...">{{ profile.summary }}</textarea>
+    <label>Years of experience</label>
+    <input type="number" name="years_experience" value="{{ profile.years_experience }}" min="0">
+    <label>Preferred roles</label>
+    <input type="text" name="preferred_roles" value="{{ profile.preferred_roles }}" placeholder="e.g. Backend Developer, Virtual Assistant">
+    <label>Preferred regions</label>
+    <input type="text" name="preferred_regions" value="{{ profile.preferred_regions }}" placeholder="e.g. Remote - Worldwide, Remote - Europe">
+    <label>Remote preference</label>
+    <select name="remote_preference" class="filter-select" style="width:100%;">
+      <option value="remote_only" {% if profile.remote_preference == "remote_only" %}selected{% endif %}>Remote only</option>
+      <option value="remote_preferred" {% if profile.remote_preference == "remote_preferred" %}selected{% endif %}>Remote preferred</option>
+      <option value="open" {% if profile.remote_preference == "open" %}selected{% endif %}>Open to remote or onsite</option>
+    </select>
+    <label>CV file (optional, for reference/attachment only)</label>
+    {% if profile.cv_file %}<p class="hint">Current: <a href="{{ profile.cv_file.url }}" class="btn-link">{{ profile.cv_file.name }}</a></p>{% endif %}
+    <input type="file" name="cv_file">
+    <div class="form-actions"><button type="submit" class="btn-primary">Save Profile</button></div>
+  </form>
+</div>
+
+{% elif tab == "skills" %}
+<div class="page-header"><div></div><a href="{% url 'skill_add' %}" class="btn-primary">+ Add Skill</a></div>
+<div class="card">
+  <table class="data-table">
+    <thead><tr><th>Skill</th><th>Proficiency</th><th>Years</th><th></th></tr></thead>
+    <tbody>
+      {% for s in skills %}
+      <tr>
+        <td>{{ s.name }}</td><td>{{ s.get_proficiency_display }}</td><td>{{ s.years }}</td>
+        <td><a href="{% url 'skill_edit' s.pk %}" class="btn-link">Edit</a> <a href="{% url 'skill_delete' s.pk %}" class="btn-link" style="color:var(--error)" onclick="return confirm('Remove this skill?');">Delete</a></td>
+      </tr>
+      {% empty %}<tr><td colspan="4" class="empty-cell">No skills added yet</td></tr>{% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% elif tab == "experience" %}
+<div class="page-header"><div></div><a href="{% url 'experience_add' %}" class="btn-primary">+ Add Experience</a></div>
+<div class="card">
+  {% for e in experiences %}
+  <div class="rule-row" style="align-items:flex-start;">
+    <div>
+      <p style="font-weight:600;">{{ e.role }} - {{ e.company }}</p>
+      <p style="font-size:12px;color:var(--gray);">{{ e.start_date|date:"M Y" }} - {% if e.end_date %}{{ e.end_date|date:"M Y" }}{% else %}Present{% endif %}</p>
+      <p style="margin-top:6px;">{{ e.description|truncatewords:30 }}</p>
+    </div>
+    <div class="rule-actions">
+      <a href="{% url 'experience_edit' e.pk %}" class="btn-link">Edit</a>
+      <a href="{% url 'experience_delete' e.pk %}" class="btn-link" style="color:var(--error)" onclick="return confirm('Remove this experience?');">Delete</a>
+    </div>
+  </div>
+  {% empty %}<p class="empty-cell">No experience added yet</p>{% endfor %}
+</div>
+
+{% elif tab == "listings" %}
+<div class="page-header">
+  <div></div>
+  <form method="post"><input type="hidden" name="action" value="run_discovery">{% csrf_token %}<button type="submit" class="btn-primary">Run Job Discovery</button></form>
+</div>
+<div class="card">
+  <table class="data-table">
+    <thead><tr><th>Title</th><th>Email Found</th><th>Status</th><th>Link</th><th></th></tr></thead>
+    <tbody>
+      {% for j in job_listings %}
+      <tr>
+        <td>{{ j.title|truncatewords:10 }}</td>
+        <td>{{ j.application_email|default:"-" }}</td>
+        <td><span class="badge {% if j.status == 'has_email' %}badge-success{% elif j.status == 'applied' or j.status == 'replied' %}badge-info{% else %}badge-status-closed{% endif %}">{{ j.get_status_display }}</span></td>
+        <td><a href="{{ j.source_url }}" target="_blank" class="btn-link">View</a></td>
+        <td>
+          <form method="post" action="{% url 'job_listing_status' j.pk %}" style="display:inline">
+            {% csrf_token %}
+            <select name="status" onchange="this.form.submit()" class="filter-select">
+              {% for val, label in j.STATUS_CHOICES %}<option value="{{ val }}" {% if j.status == val %}selected{% endif %}>{{ label }}</option>{% endfor %}
+            </select>
+          </form>
+          <form method="post" action="{% url 'job_listing_generate_notes' j.pk %}" style="display:inline">
+            {% csrf_token %}
+            <button type="submit" class="btn-link" style="border:none;background:none;cursor:pointer;">{% if j.ai_talking_points %}Regenerate{% else %}Generate{% endif %} Talking Points</button>
+          </form>
+        </td>
+      </tr>
+      {% if j.ai_talking_points %}
+      <tr><td colspan="5"><div class="thread-block" style="white-space:pre-wrap;font-size:13px;">{{ j.ai_talking_points }}</div></td></tr>
+      {% endif %}
+      {% empty %}<tr><td colspan="5" class="empty-cell">No job listings yet - run discovery above, and make sure you have at least one active search config</td></tr>{% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% else %}
+<div class="page-header">
+  <div></div>
+  <div style="display:flex;gap:10px;">
+    <form method="post" action="{% url 'job_config_add_recommended' %}">{% csrf_token %}<button type="submit" class="btn-primary">Add Recommended Searches</button></form>
+    <a href="{% url 'job_config_add' %}" class="btn-secondary">+ Add Custom Search</a>
+  </div>
+</div>
+
+<div class="card" style="margin-bottom:16px;">
+  <p class="hint">"Add Recommended Searches" creates active searches across General, AI Training (micro1-style), Startup/Entry-Level, Internship, and Visa Sponsorship categories in one click, based on your Preferred Roles in the Profile tab. These run automatically every day at 8:30 AM alongside your other searches - no need to re-add them.</p>
+  <p class="hint" style="margin-top:6px;"><strong>Honest note:</strong> Internship and Visa Sponsorship results only surface listings that explicitly mention this in the posting text - many relevant employers don't state it upfront, so this is a real but partial view, not a complete list.</p>
+</div>
+
+<div class="card" style="margin-bottom:16px;">
+  <div class="card-header"><h3>Quick Add: Specific Platforms</h3></div>
+  <p class="hint" style="margin-bottom:12px;">Each button below creates one search targeted at that specific site - edit role/region before saving if you like.</p>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;">
+    <a href="{% url 'job_config_add' %}?role_query=AI+trainer+OR+annotation+OR+data+labeling&region=site%3Ajobs.micro1.ai" class="btn-secondary">+ AI Agent Training (micro1)</a>
+    <a href="{% url 'job_config_add' %}?role_query=open+source+internship&region=site%3Aoutreachy.org" class="btn-secondary">+ Outreachy Internships</a>
+    <a href="{% url 'job_config_add' %}?role_query=transcription+OR+captioning+jobs&region=site%3Arev.com" class="btn-secondary">+ Rev.com</a>
+    <a href="{% url 'job_config_add' %}?role_query=research+studies+paid&region=site%3Aprolific.com" class="btn-secondary">+ Prolific</a>
+    <a href="{% url 'job_config_add' %}?role_query=transcription+jobs&region=site%3Atranscribeme.com" class="btn-secondary">+ TranscribeMe</a>
+    <a href="{% url 'job_config_add' %}?role_query=microtasks+OR+data+entry&region=site%3Amicroworkers.com" class="btn-secondary">+ MicroWorkers</a>
+    <a href="{% url 'job_config_add' %}?role_query=health+information+management+OR+health+records+OR+medical+coding&region=site%3Areliefweb.int+OR+site%3Adevex.com+OR+site%3Aidealist.org" class="btn-secondary">+ NGO Jobs (ReliefWeb, Devex, Idealist)</a>
+    <a href="{% url 'job_config_add' %}?role_query=NGO+OR+humanitarian+OR+international+development+jobs&region=Ghana" class="btn-secondary">+ NGO Jobs in Ghana</a>
+    <a href="{% url 'job_config_add' %}?role_query=health+information+management&region=site%3Alinkedin.com%2Fjobs" class="btn-secondary">+ LinkedIn Jobs</a>
+    <a href="{% url 'job_config_add' %}?role_query=AI+trainer+OR+expert+contractor&region=site%3Amercor.com" class="btn-secondary">+ Mercor</a>
+    <a href="{% url 'job_config_add' %}?role_query=remote+work&region=site%3Asideshift.app" class="btn-secondary">+ SideShift.app</a>
+    <a href="{% url 'job_config_add' %}?role_query=remote+job+open+to+Africa+OR+open+to+Ghana&region=remote+worldwide" class="btn-secondary">+ Remote (Africa/Ghana Eligible)</a>
+    <a href="{% url 'job_config_add' %}?role_query=internship+open+to+Africa+OR+open+to+Ghana+OR+open+to+African+applicants&region=remote" class="btn-secondary">+ Internship (Africa/Ghana Eligible)</a>
+    <a href="{% url 'job_config_add' %}?role_query=health+information+management+OR+medical+records+OR+health+data&region=remote+OR+onsite+worldwide" class="btn-secondary">+ Health Info Management (Remote &amp; Onsite)</a>
+    <a href="{% url 'job_config_add' %}?role_query=health+information+research+visa+sponsorship+OR+relocation&region=remote+worldwide" class="btn-secondary">+ Health Research (Visa Sponsorship)</a>
+  </div>
+</div>
+
+<div class="card">
+  {% for c in job_configs %}
+  <div class="rule-row">
+    <p>{{ c.role_query }} - {{ c.region }} <span class="badge badge-info" style="margin-left:6px;">{{ c.get_category_display }}</span></p>
+    <div class="rule-actions">
+      <span class="badge {% if c.active %}badge-success{% else %}badge-status-closed{% endif %}">{% if c.active %}Active{% else %}Inactive{% endif %}</span>
+      <a href="{% url 'job_config_edit' c.pk %}" class="btn-link">Edit</a>
+      <a href="{% url 'job_config_toggle' c.pk %}" class="btn-link">{% if c.active %}Disable{% else %}Enable{% endif %}</a>
+      <a href="{% url 'job_config_delete' c.pk %}" class="btn-link" style="color:var(--error)" onclick="return confirm('Remove this search?');">Delete</a>
+    </div>
+  </div>
+  {% empty %}<p class="empty-cell">No job searches configured yet</p>{% endfor %}
+</div>
+{% endif %}
+{% endblock %}

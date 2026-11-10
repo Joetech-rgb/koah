@@ -1,0 +1,56 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign Up - KoahCloud</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/app.css' %}?v=19">
+<link rel="stylesheet" href="{% static 'css/natural.css' %}?v=19">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23673DE6' stroke-width='2'%3E%3Cpath d='M17.5 19H9a5 5 0 1 1 1.4-9.8A6 6 0 0 1 22 11.5a4.5 4.5 0 0 1-.5 7.5'/%3E%3C/svg%3E">
+</head>
+<body class="auth-body-light">
+  <div class="auth-card-light">
+    <div class="auth-logo-light"><svg class="logo-svg" viewBox="0 0 24 24" fill="none" stroke="#673DE6" stroke-width="2"><path d="M17.5 19H9a5 5 0 1 1 1.4-9.8A6 6 0 0 1 22 11.5a4.5 4.5 0 0 1-.5 7.5"/></svg></div>
+    <h2 class="auth-title-light">Get Started</h2>
+    <p class="auth-sub-light">Create your account to start growing with AI.</p>
+
+    {% if form.errors %}
+      <div class="alert-error">
+        {% for field in form %}{% for error in field.errors %}{{ error }}<br>{% endfor %}{% endfor %}
+        {% for error in form.non_field_errors %}{{ error }}<br>{% endfor %}
+      </div>
+    {% endif %}
+
+    <form method="post">
+      {% csrf_token %}
+      <label class="auth-label-light">Full Name</label>
+      <div style="display:flex;gap:8px;">
+        <input class="auth-input-light" type="text" name="first_name" placeholder="First name" required style="flex:1;">
+        <input class="auth-input-light" type="text" name="last_name" placeholder="Last name" required style="flex:1;">
+      </div>
+      <label class="auth-label-light">Username</label>
+      <input class="auth-input-light" type="text" name="username" placeholder="Choose a username" required>
+      <label class="auth-label-light">Email Address</label>
+      <input class="auth-input-light" type="email" name="email" placeholder="Enter Email Address" required>
+      <label class="auth-label-light">Create Password</label>
+      <input class="auth-input-light" type="password" name="password1" placeholder="Create Password" required>
+      <label class="auth-label-light">Confirm Password</label>
+      <input class="auth-input-light" type="password" name="password2" placeholder="Confirm Password" required>
+      <button type="submit" class="auth-btn-light">Create Account</button>
+      <p class="auth-terms-light">By proceeding, you agree to our <a href="#">Terms</a> and <a href="#">Privacy Policy</a>.</p>
+    </form>
+    <div class="auth-divider-light"><span></span>Or<span></span></div>
+    <button class="auth-social-btn-light" disabled title="Google sign-in not yet connected">
+      <svg width="16" height="16" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.9 32 29.4 35 24 35c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 5 29.6 3 24 3 12.4 3 3 12.4 3 24s9.4 21 21 21 21-9.4 21-21c0-1.2-.1-2.4-.3-3.5z"/></svg>
+      Continue with Google
+    </button>
+    <button class="auth-social-btn-light" disabled title="Apple sign-in not yet connected">
+      &#63743; Continue with Apple
+    </button>
+    <p class="auth-footer-light">Already have an account? <a href="{% url 'login' %}">Login</a></p>
+  </div>
+</body>
+</html>

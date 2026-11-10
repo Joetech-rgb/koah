@@ -1,0 +1,44 @@
+﻿{% extends "base.html" %}
+{% block title %}Research{% endblock %}
+{% block content %}
+<div class="page-header"><div><h1>Research</h1><p class="page-subtitle">AI intelligence workspace for target companies.</p></div></div>
+
+<div class="grid-2col">
+  <div class="card">
+    <form method="get" class="filter-bar">
+      <input type="text" name="q" value="{{ q }}" placeholder="Search companies..." class="filter-input">
+      <button type="submit" class="btn-secondary">Search</button>
+    </form>
+    <div class="research-list">
+      {% for c in companies %}
+        <a href="?company_id={{ c.pk }}" class="research-item {% if selected_company.pk == c.pk %}active{% endif %}">
+          <span>{{ c.name }}</span>
+          <span class="badge badge-status-{{ c.status }}">{{ c.get_status_display }}</span>
+        </a>
+      {% empty %}<p class="empty-cell">No companies yet</p>{% endfor %}
+    </div>
+  </div>
+
+  <div class="card">
+    {% if selected_company %}
+      <div class="card-header"><h3>{{ selected_company.name }}</h3></div>
+      {% if research %}
+        <p><strong>Has website:</strong> {{ research.has_website|yesno:"Yes,No" }}</p>
+        <p><strong>Detected industry:</strong> {{ research.detected_industry|default:"-" }}</p>
+        <p><strong>Detected tools:</strong> {{ research.detected_tools|join:", "|default:"None detected" }}</p>
+        <p><strong>Summary:</strong> {{ research.summary|default:"-" }}</p>
+      {% else %}
+        <p class="empty-cell">Not yet researched.</p>
+      {% endif %}
+      {% if messages %}{% for m in messages %}<div class="alert-{{ m.tags|default:'success' }}" style="margin-top:12px;">{{ m }}</div>{% endfor %}{% endif %}
+      <form method="post" style="margin-top:14px;">
+        {% csrf_token %}
+        <input type="hidden" name="company_id" value="{{ selected_company.pk }}">
+        <button type="submit" name="action" value="run_research" class="btn-primary">Run Research</button>
+      </form>
+    {% else %}
+      <p class="empty-cell">Select a company from the list to view or run research.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

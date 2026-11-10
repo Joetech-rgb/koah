@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block title %}AI Agent{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div><h1>AI Agent</h1><p class="page-subtitle">Live status and cost tracking for the outreach agent.</p></div>
+  <span class="status-dot {% if agent_running %}status-running{% else %}status-idle{% endif %}">{% if agent_running %}Running{% else %}Idle{% endif %}</span>
+</div>
+
+<div class="tabs">
+  <a href="?tab=overview" class="tab {% if tab == 'overview' %}active{% endif %}">Overview</a>
+  <a href="?tab=logs" class="tab {% if tab == 'logs' %}active{% endif %}">Agent Logs <span>{{ total_invocations }}</span></a>
+</div>
+
+{% if tab == "overview" %}
+<div class="kpi-grid">
+  <div class="mini-stat"><p class="mini-label">Invocations</p><p class="mini-value">{{ total_invocations }}</p></div>
+  <div class="mini-stat"><p class="mini-label">Tokens In</p><p class="mini-value">{{ tokens_in }}</p></div>
+  <div class="mini-stat"><p class="mini-label">Tokens Out</p><p class="mini-value">{{ tokens_out }}</p></div>
+  <div class="mini-stat"><p class="mini-label">Estimated Cost</p><p class="mini-value">${{ total_cost|floatformat:4 }}</p></div>
+</div>
+
+<div class="card">
+  <div class="card-header"><h3>Current Task</h3></div>
+  <p><strong>Last discovery:</strong> {% if last_company %}{{ last_company.created_at|timesince }} ago{% else %}No activity yet{% endif %}</p>
+  <p><strong>Next run:</strong> 8:00 AM daily</p>
+  <p class="hint">Success/failure status per call isn't tracked yet - only successful calls are currently logged.</p>
+</div>
+
+<div class="card">
+  <div class="card-header"><h3>Recent Runs</h3></div>
+  <table class="data-table">
+    <thead><tr><th>Task</th><th>Model</th><th>Tokens (in/out)</th><th>Cost</th><th>Time</th></tr></thead>
+    <tbody>
+      {% for i in recent_invocations %}
+      <tr>
+        <td>{{ i.prompt_key }}</td>
+        <td>{{ i.model_used }}</td>
+        <td>{{ i.tokens_in }} / {{ i.tokens_out }}</td>
+        <td>${{ i.cost_usd }}</td>
+        <td>{{ i.created_at|timesince }} ago</td>
+      </tr>
+      {% empty %}<tr><td colspan="5" class="empty-cell">No AI calls logged yet</td></tr>{% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% else %}
+<div class="card">
+  <table class="data-table">
+    <thead><tr><th>Date</th><th>Task</th><th>Status</th><th>Model</th><th>Input Tokens</th><th>Output Tokens</th><th>Cost</th><th>Duration</th></tr></thead>
+    <tbody>
+      {% for i in page_obj %}
+      <tr>
+        <td>{{ i.created_at|date:"M d, Y H:i" }}</td>
+        <td>{{ i.prompt_key }}</td>
+        <td><span class="badge {% if i.status == 'success' %}badge-success{% else %}badge-status-closed{% endif %}">{{ i.status }}</span></td>
+        <td>{{ i.model_used }}</td>
+        <td>{{ i.tokens_in }}</td>
+        <td>{{ i.tokens_out }}</td>
+        <td>${{ i.cost_usd }}</td>
+        <td>{{ i.duration_ms }}ms</td>
+      </tr>
+      {% empty %}<tr><td colspan="6" class="empty-cell">No invocations logged yet</td></tr>{% endfor %}
+    </tbody>
+  </table>
+  {% if page_obj.paginator.num_pages > 1 %}
+  <div class="pagination">
+    {% if page_obj.has_previous %}<a href="?tab=logs&page={{ page_obj.previous_page_number }}">&laquo; Prev</a>{% endif %}
+    <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+    {% if page_obj.has_next %}<a href="?tab=logs&page={{ page_obj.next_page_number }}">Next &raquo;</a>{% endif %}
+  </div>
+  {% endif %}
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,52 @@
+﻿{% extends "base.html" %}
+{% block title %}{{ company.name }}{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div>
+    <a href="{% url 'companies' %}" class="btn-link">&larr; Back to Companies</a>
+    <h1>{{ company.name }}</h1>
+    <p class="page-subtitle">{{ company.domain|default:"No domain on file" }}</p>
+  </div>
+  <span class="badge badge-status-{{ company.status }}">{{ company.get_status_display }}</span>
+</div>
+
+<div class="grid-2col">
+  <div class="card">
+    <div class="card-header"><h3>Overview</h3></div>
+    <p><strong>Country:</strong> {{ company.country|default:"-" }}</p>
+    <p><strong>Industry:</strong> {{ company.industry|default:"-" }}</p>
+    <p><strong>Contact email:</strong> {{ company.contact_email|default:"-" }}</p>
+    <p><strong>Added:</strong> {{ company.created_at|date:"M d, Y" }}</p>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><h3>Research</h3></div>
+    {% if research %}
+      <p><strong>Has website:</strong> {{ research.has_website|yesno:"Yes,No" }}</p>
+      <p><strong>Detected industry:</strong> {{ research.detected_industry|default:"-" }}</p>
+      <p><strong>Detected tools:</strong> {{ research.detected_tools|join:", "|default:"None detected" }}</p>
+      <p><strong>Summary:</strong> {{ research.summary|default:"-" }}</p>
+    {% else %}
+      <p class="empty-cell">Not yet researched.</p>
+    {% endif %}
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header"><h3>Email History</h3></div>
+  {% for t in threads %}
+    <div class="thread-block">
+      <p class="thread-subject">{{ t.subject }} <span class="badge badge-status-{{ t.status }}">{{ t.get_status_display }}</span></p>
+      {% for m in t.messages.all %}
+        <div class="message-row {{ m.direction }}">
+          <span class="message-dir">{{ m.direction|title }}</span>
+          <p>{{ m.body|truncatewords:40 }}</p>
+          <span class="message-time">{{ m.created_at|date:"M d, H:i" }}</span>
+        </div>
+      {% endfor %}
+    </div>
+  {% empty %}
+    <p class="empty-cell">No email threads yet for this company.</p>
+  {% endfor %}
+</div>
+{% endblock %}

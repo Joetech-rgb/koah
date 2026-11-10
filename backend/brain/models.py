@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from django.conf import settings
 from django.db import models
 
 
@@ -28,6 +29,8 @@ class CompanyProfile(TimeStampedModel):
         help_text="e.g. friendly, formal, direct",
     )
     based_in = models.CharField(max_length=255, default="Ghana")
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True, related_name="company_profiles")
+    phone = models.CharField(max_length=30, blank=True, help_text="Included in every pitch signature, e.g. +233 54 019 1971")
 
     class Meta:
         verbose_name = "Company Profile"
@@ -51,6 +54,7 @@ class Service(TimeStampedModel):
         help_text="Prospect signal that suggests this service fits, "
                    "e.g. 'no website detected'",
     )
+    is_active = models.BooleanField(default=True)
 
     class Meta:
         ordering = ["name"]
@@ -71,6 +75,7 @@ class Product(TimeStampedModel):
     price_note = models.CharField(
         max_length=255, blank=True, help_text="e.g. 'from $500'"
     )
+    is_active = models.BooleanField(default=True)
 
     class Meta:
         ordering = ["name"]

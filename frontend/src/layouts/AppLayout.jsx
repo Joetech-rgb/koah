@@ -1,9 +1,10 @@
-import { NavLink, Outlet } from "react-router-dom";
+﻿import { NavLink, Outlet } from "react-router-dom";
 
 const navItems = [
   { to: "/", label: "Dashboard" },
   { to: "/leads", label: "Leads" },
   { to: "/drafts", label: "Drafts" },
+  { to: "/draft-tester", label: "Draft Tester" },
   { to: "/settings", label: "Settings" },
 ];
 

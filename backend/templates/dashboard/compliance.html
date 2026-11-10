@@ -1,0 +1,69 @@
+﻿{% extends "base.html" %}
+{% block title %}Compliance{% endblock %}
+{% block content %}
+<div class="page-header"><div><h1>Compliance</h1><p class="page-subtitle">Suppressed contacts, audit events and reply filtering.</p></div></div>
+
+<div class="tabs">
+  <a href="?tab=overview" class="tab {% if tab == 'overview' %}active{% endif %}">Overview</a>
+  <a href="?tab=suppressed" class="tab {% if tab == 'suppressed' %}active{% endif %}">Suppressed Contacts <span>{{ suppressed_count }}</span></a>
+  <a href="?tab=audit" class="tab {% if tab == 'audit' %}active{% endif %}">Audit Logs <span>{{ audit_count }}</span></a>
+</div>
+
+{% if tab == "overview" %}
+<div class="kpi-grid">
+  <div class="mini-stat"><p class="mini-label">Suppressed Contacts</p><p class="mini-value">{{ suppressed_count }}</p></div>
+  <div class="mini-stat"><p class="mini-label">Total Audit Events</p><p class="mini-value">{{ audit_count }}</p></div>
+  <div class="mini-stat"><p class="mini-label">Replies Filtered Out</p><p class="mini-value">{{ skipped_replies }}</p></div>
+</div>
+<div class="card">
+  <div class="card-header"><h3>Recent Events</h3></div>
+  <table class="data-table">
+    <thead><tr><th>Action</th><th>Target</th><th>Time</th></tr></thead>
+    <tbody>
+      {% for a in recent_audits %}
+      <tr><td>{{ a.action }}</td><td>{{ a.target_type }}#{{ a.target_id }}</td><td>{{ a.created_at|timesince }} ago</td></tr>
+      {% empty %}<tr><td colspan="3" class="empty-cell">No audit events yet</td></tr>{% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% elif tab == "suppressed" %}
+<div class="card">
+  <p class="hint" style="margin-bottom:12px;">Suppressed contacts will not be emailed again by the automation.</p>
+  <table class="data-table">
+    <thead><tr><th>Email</th><th>Reason</th><th>Date Suppressed</th></tr></thead>
+    <tbody>
+      {% for s in page_obj %}
+      <tr><td>{{ s.email }}</td><td>{{ s.reason }}</td><td>{{ s.added_at|date:"M d, Y" }}</td></tr>
+      {% empty %}<tr><td colspan="3" class="empty-cell">No suppressed contacts</td></tr>{% endfor %}
+    </tbody>
+  </table>
+  {% if page_obj.paginator.num_pages > 1 %}
+  <div class="pagination">
+    {% if page_obj.has_previous %}<a href="?tab=suppressed&page={{ page_obj.previous_page_number }}">&laquo; Prev</a>{% endif %}
+    <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+    {% if page_obj.has_next %}<a href="?tab=suppressed&page={{ page_obj.next_page_number }}">Next &raquo;</a>{% endif %}
+  </div>
+  {% endif %}
+</div>
+
+{% else %}
+<div class="card">
+  <table class="data-table">
+    <thead><tr><th>Action</th><th>Target</th><th>Detail</th><th>Time</th></tr></thead>
+    <tbody>
+      {% for a in page_obj %}
+      <tr><td>{{ a.action }}</td><td>{{ a.target_type }}#{{ a.target_id }}</td><td>{{ a.detail }}</td><td>{{ a.created_at|date:"M d, Y H:i" }}</td></tr>
+      {% empty %}<tr><td colspan="4" class="empty-cell">No audit logs yet</td></tr>{% endfor %}
+    </tbody>
+  </table>
+  {% if page_obj.paginator.num_pages > 1 %}
+  <div class="pagination">
+    {% if page_obj.has_previous %}<a href="?tab=audit&page={{ page_obj.previous_page_number }}">&laquo; Prev</a>{% endif %}
+    <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+    {% if page_obj.has_next %}<a href="?tab=audit&page={{ page_obj.next_page_number }}">Next &raquo;</a>{% endif %}
+  </div>
+  {% endif %}
+</div>
+{% endif %}
+{% endblock %}

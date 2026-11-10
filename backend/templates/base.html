@@ -1,0 +1,33 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}Dashboard{% endblock %} - KoahCloud</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/app.css' %}?v=19">
+<link rel="stylesheet" href="{% static 'css/natural.css' %}?v=19">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23673DE6' stroke-width='2'%3E%3Cpath d='M17.5 19H9a5 5 0 1 1 1.4-9.8A6 6 0 0 1 22 11.5a4.5 4.5 0 0 1-.5 7.5'/%3E%3C/svg%3E">
+</head>
+<body>
+<button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open menu">&#9776;</button>
+<div class="app-shell">
+  {% include "components/sidebar.html" %}
+  <div class="app-main">
+    {% include "components/topbar.html" %}
+    <main class="app-content">
+      {% block content %}{% endblock %}
+    </main>
+    {% include "components/footer.html" %}
+  </div>
+</div>
+<script>
+document.getElementById('mobileMenuBtn').addEventListener('click', function () {
+  document.querySelector('.sidebar').classList.toggle('open');
+});
+</script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

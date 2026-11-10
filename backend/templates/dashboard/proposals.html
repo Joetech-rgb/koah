@@ -1,0 +1,21 @@
+﻿{% extends "base.html" %}
+{% block title %}Proposal Templates{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div><h1>Proposal Templates</h1><p class="page-subtitle">Reusable pitch skeletons for the AI to adapt.</p></div>
+  <a href="{% url 'proposal_add' %}" class="btn-primary">+ New Template</a>
+</div>
+<div class="portfolio-grid">
+  {% for t in templates %}
+  <div class="portfolio-card">
+    <h4>{{ t.name }}</h4>
+    <p>{{ t.template_text|truncatewords:20 }}</p>
+    <div class="portfolio-actions">
+      <a href="{% url 'proposal_edit' t.pk %}" class="btn-link">Edit</a>
+      <a href="{% url 'proposal_duplicate' t.pk %}" class="btn-link">Duplicate</a>
+      <a href="{% url 'proposal_delete' t.pk %}" class="btn-link" style="color:var(--error)" onclick="return confirm('Delete this template?');">Delete</a>
+    </div>
+  </div>
+  {% empty %}<p class="empty-cell">No proposal templates yet.</p>{% endfor %}
+</div>
+{% endblock %}

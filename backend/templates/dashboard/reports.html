@@ -1,0 +1,87 @@
+﻿{% extends "base.html" %}
+{% block title %}Reports{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div><h1>Reports</h1><p class="page-subtitle">Performance overview and daily digests.</p></div>
+</div>
+
+<div class="tabs">
+  <a href="?tab=overview&range={{ range }}" class="tab {% if tab == 'overview' %}active{% endif %}">Overview</a>
+  <a href="?tab=digests" class="tab {% if tab == 'digests' %}active{% endif %}">Daily Digests</a>
+</div>
+
+{% if tab == "overview" %}
+<div class="range-selector">
+  <a href="?tab=overview&range=today" class="range-btn {% if range == 'today' %}active{% endif %}">Today</a>
+  <a href="?tab=overview&range=7" class="range-btn {% if range == '7' %}active{% endif %}">7 Days</a>
+  <a href="?tab=overview&range=30" class="range-btn {% if range == '30' %}active{% endif %}">30 Days</a>
+</div>
+
+<div class="kpi-grid">
+  <div class="mini-stat"><p class="mini-label">Businesses Found</p><p class="mini-value">{{ businesses_found }}</p></div>
+  <div class="mini-stat"><p class="mini-label">Emails Sent</p><p class="mini-value">{{ emails_sent }}</p></div>
+  <div class="mini-stat"><p class="mini-label">Replies</p><p class="mini-value">{{ replies }}</p></div>
+  <div class="mini-stat"><p class="mini-label">Interested Leads</p><p class="mini-value">{{ interested }}</p></div>
+  <div class="mini-stat"><p class="mini-label">Reply Rate</p><p class="mini-value">{{ reply_rate }}%</p></div>
+</div>
+
+<div class="grid-2col">
+  <div class="card">
+    <div class="card-header"><h3>Recent Replies</h3></div>
+    <table class="data-table">
+      <thead><tr><th>Company</th><th>Time</th></tr></thead>
+      <tbody>
+        {% for r in recent_replies %}
+        <tr><td>{{ r.thread.target_company.name }}</td><td>{{ r.created_at|timesince }} ago</td></tr>
+        {% empty %}<tr><td colspan="2" class="empty-cell">No replies in this period</td></tr>{% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="card">
+    <div class="card-header"><h3>Interested Leads</h3></div>
+    <table class="data-table">
+      <thead><tr><th>Company</th><th>Subject</th></tr></thead>
+      <tbody>
+        {% for t in interested_leads %}
+        <tr><td>{{ t.target_company.name }}</td><td>{{ t.subject }}</td></tr>
+        {% empty %}<tr><td colspan="2" class="empty-cell">No interested leads yet</td></tr>{% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header"><h3>Top Performing Companies</h3></div>
+  <table class="data-table">
+    <thead><tr><th>Company</th><th>Status</th><th>Last Activity</th></tr></thead>
+    <tbody>
+      {% for c in top_companies %}
+      <tr><td>{{ c.name }}</td><td><span class="badge badge-status-{{ c.status }}">{{ c.get_status_display }}</span></td><td>{{ c.created_at|timesince }} ago</td></tr>
+      {% empty %}<tr><td colspan="3" class="empty-cell">No data yet</td></tr>{% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% else %}
+<div class="card">
+  <table class="data-table">
+    <thead><tr><th>Date</th><th>Businesses Found</th><th>Emails Sent</th><th>Replies</th><th>Hot Leads</th><th></th></tr></thead>
+    <tbody>
+      {% for d in page_obj %}
+      <tr>
+        <td>{{ d.date }}</td><td>{{ d.businesses_found }}</td><td>{{ d.emails_sent }}</td><td>{{ d.replies_received }}</td><td>{{ d.hot_leads|length }}</td>
+        <td><a href="{% url 'digest_detail' d.date %}" class="btn-link">View</a></td>
+      </tr>
+      {% empty %}<tr><td colspan="6" class="empty-cell">No daily digests generated yet - this runs automatically at 5PM each day</td></tr>{% endfor %}
+    </tbody>
+  </table>
+  {% if page_obj.paginator.num_pages > 1 %}
+  <div class="pagination">
+    {% if page_obj.has_previous %}<a href="?tab=digests&page={{ page_obj.previous_page_number }}">&laquo; Prev</a>{% endif %}
+    <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+    {% if page_obj.has_next %}<a href="?tab=digests&page={{ page_obj.next_page_number }}">Next &raquo;</a>{% endif %}
+  </div>
+  {% endif %}
+</div>
+{% endif %}
+{% endblock %}

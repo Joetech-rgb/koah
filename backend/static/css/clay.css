@@ -1,0 +1,101 @@
+/* ===== Claymorphism layer (light mode only). Loads after app.css; remove its <link> to roll back. ===== */
+:root {
+  --clay-raised: 10px 10px 24px rgba(91,122,85,0.13), -8px -8px 20px rgba(255,255,255,0.95),
+                 inset 2px 2px 4px rgba(255,255,255,0.9), inset -3px -3px 8px rgba(91,122,85,0.06);
+  --clay-small:  5px 5px 12px rgba(91,122,85,0.13), -4px -4px 10px rgba(255,255,255,0.95),
+                 inset 1px 1px 3px rgba(255,255,255,0.9), inset -2px -2px 4px rgba(91,122,85,0.05);
+  --clay-inset:  inset 4px 4px 9px rgba(91,122,85,0.12), inset -4px -4px 9px rgba(255,255,255,0.95);
+  --clay-btn:    6px 6px 14px rgba(91,122,85,0.35), -4px -4px 10px rgba(255,255,255,0.9),
+                 inset 2px 2px 4px rgba(255,255,255,0.35), inset -3px -3px 6px rgba(0,0,0,0.12);
+  --clay-r: 24px;
+}
+body { background: linear-gradient(160deg, #F6F1E7 0%, #E9E1CE 100%); background-attachment: fixed; }
+.app-main, .app-content { background: transparent; }
+
+/* Frame: sidebar, topbar, footer */
+.sidebar { border-radius: 0 28px 28px 0; box-shadow: 10px 0 28px rgba(91,122,85,0.09); z-index: 5; }
+.topbar { border-radius: 0 0 24px 24px; box-shadow: 0 10px 26px rgba(91,122,85,0.08); }
+.app-footer { border-radius: 24px 24px 0 0; box-shadow: 0 -8px 22px rgba(91,122,85,0.06); }
+.topbar-search { border-radius: 16px; box-shadow: var(--clay-inset); }
+.nav-item { border-radius: 16px; transition: box-shadow .15s, background .15s, transform .15s; }
+.nav-item:hover { background: #E9E1CE; box-shadow: var(--clay-small); }
+.nav-item.active { background: #E0E8D6; border-radius: 16px; box-shadow: var(--clay-small); }
+.sidebar-cta { border-radius: 22px; box-shadow: var(--clay-small); }
+.avatar { box-shadow: var(--clay-btn); }
+
+/* Cards and panels */
+.card, .kpi-card, .mini-stat, .form-card, .portfolio-card, .feature-card, .roadmap-card,
+.uc-card, .pp-card, .benefit-card, .price-card, .floating-dashboard, .fd2,
+.login-card, .auth-card-light {
+  border: none; border-radius: var(--clay-r); box-shadow: var(--clay-raised); background: var(--card);
+}
+.card, .kpi-card, .mini-stat, .portfolio-card { transition: transform .18s ease, box-shadow .18s ease; }
+.card:hover, .kpi-card:hover, .portfolio-card:hover { transform: translateY(-2px); }
+.price-card.featured { box-shadow: 10px 10px 28px rgba(91,122,85,0.22), -8px -8px 20px rgba(255,255,255,0.95), inset 2px 2px 4px rgba(255,255,255,0.9); }
+.thread-block { border-radius: 20px; box-shadow: var(--clay-inset); background: var(--bg); }
+.fd-kpi, .fd2-kpi, .fd2-chart-card, .fd2-agent-card { border-radius: 16px; box-shadow: var(--clay-small); background: var(--card); }
+.fd-chart { border-radius: 16px; box-shadow: var(--clay-inset); }
+.kpi-icon, .what-icon { border-radius: 18px; box-shadow: var(--clay-small); }
+.auth-logo-light { box-shadow: var(--clay-raised); }
+.auth-orb-light { box-shadow: var(--clay-raised); }
+.hiw-num { box-shadow: var(--clay-btn); }
+
+/* Buttons */
+.btn-primary, .auth-btn-light {
+  background: linear-gradient(145deg, #6F8F68, #5B7A55); border-radius: 18px; border: none;
+  box-shadow: var(--clay-btn); transition: transform .15s, box-shadow .15s;
+}
+.btn-primary:hover, .auth-btn-light:hover { transform: translateY(-2px); }
+.btn-primary:active, .auth-btn-light:active, .btn-secondary:active, .range-btn:active {
+  transform: translateY(1px); box-shadow: inset 4px 4px 9px rgba(0,0,0,0.22), inset -3px -3px 7px rgba(255,255,255,0.2);
+}
+.btn-secondary, .range-btn, .mobile-menu-btn, .auth-social-btn-light {
+  background: var(--card); border: none; border-radius: 18px; box-shadow: var(--clay-small); transition: transform .15s, box-shadow .15s;
+}
+.btn-secondary:hover, .range-btn:hover { transform: translateY(-2px); }
+.range-btn.active { background: linear-gradient(145deg, #6F8F68, #5B7A55); box-shadow: var(--clay-btn); }
+.ctv .btn-primary { background: var(--card); box-shadow: 6px 6px 14px rgba(0,0,0,0.18), -3px -3px 8px rgba(255,255,255,0.25); }
+
+/* Inputs: pressed-in */
+.filter-input, .filter-select, .form-card input, .composer, .settings-content input, .settings-content textarea,
+.login-card input, .auth-input-light {
+  border: none; border-radius: 16px; background: #F6F1E7; box-shadow: var(--clay-inset);
+  transition: box-shadow .15s;
+}
+.filter-input:focus, .filter-select:focus, .form-card input:focus, .composer:focus,
+.settings-content input:focus, .settings-content textarea:focus, .login-card input:focus, .auth-input-light:focus {
+  outline: none; box-shadow: var(--clay-inset), 0 0 0 3px rgba(91,122,85,0.25);
+}
+
+/* Badges, pills, statuses (colors unchanged) */
+.badge, .badge-info, .badge-success, .badge-warning,
+.badge-status-new, .badge-status-researched, .badge-status-drafted,
+.badge-status-sent, .badge-status-replied, .badge-status-closed { border-radius: 999px; padding: 4px 11px; box-shadow: var(--clay-small); }
+.pill, .status-dot, .hero-badge, .roadmap-tag, .fd-pill { border: none; border-radius: 999px; box-shadow: var(--clay-small); }
+.alert-success, .alert-error { border-radius: 18px; box-shadow: var(--clay-small); }
+
+/* Tabs and lists */
+.tabs { gap: 8px; }
+.tabs .tab { border-bottom: none; border-radius: 16px; transition: box-shadow .15s; }
+.tabs .tab.active { background: var(--card); border-bottom: none; box-shadow: var(--clay-small); }
+.tabs .tab span { box-shadow: var(--clay-inset); }
+.research-item, .settings-nav-item { border-radius: 16px; }
+.research-item:hover, .settings-nav-item:hover { box-shadow: var(--clay-small); background: var(--card); }
+.research-item.active, .settings-nav-item.active { box-shadow: var(--clay-small); }
+.data-table tbody tr { transition: background .15s; }
+.data-table tbody tr:hover { background: #E9E1CE; }
+.data-table th:first-child, .data-table td:first-child { border-radius: 14px 0 0 14px; }
+.data-table th:last-child, .data-table td:last-child { border-radius: 0 14px 14px 0; }
+
+/* Landing and login frames */
+.landing-nav { border-bottom: none; box-shadow: 0 10px 26px rgba(91,122,85,0.09); border-radius: 0 0 28px 28px; }
+.landing-footer2 { border-top: none; border-radius: 24px 24px 0 0; box-shadow: 0 -8px 22px rgba(91,122,85,0.08); }
+.pain-points, .trust-strip { background: transparent; }
+.faq-list details { border-bottom: none; background: var(--card); border-radius: 20px; box-shadow: var(--clay-small); padding: 16px 20px; margin-bottom: 14px; }
+.price-card ul li { border-bottom: none; }
+.login-body, .auth-body-light { background: transparent; }
+
+@media (max-width: 767px) {
+  :root { --clay-r: 20px; }
+  .sidebar { border-radius: 0 22px 22px 0; }
+}

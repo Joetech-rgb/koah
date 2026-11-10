@@ -1,0 +1,16 @@
+﻿{% extends "base.html" %}
+{% block title %}Sales Rule{% endblock %}
+{% block content %}
+<div class="page-header"><div><h1>{% if instance %}Edit{% else %}Add{% endif %} Sales Rule</h1></div></div>
+<div class="card form-card">
+  <form method="post">
+    {% csrf_token %}
+    <label>Rule</label>
+    <textarea name="rule_text" rows="4" class="composer" placeholder="e.g. Always mention laptops as an add-on">{{ instance.rule_text|default:'' }}</textarea>
+    <div class="form-actions">
+      <button type="submit" class="btn-primary">Save</button>
+      <a href="{% url 'sales_rules' %}" class="btn-secondary">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

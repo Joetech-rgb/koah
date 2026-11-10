@@ -1,0 +1,18 @@
+﻿{% extends "base.html" %}
+{% block title %}Niche{% endblock %}
+{% block content %}
+<div class="page-header"><div><h1>{% if instance %}Edit{% else %}Add{% endif %} Niche</h1></div></div>
+<div class="card form-card">
+  <form method="post">
+    {% csrf_token %}
+    <label>Niche / Industry</label>
+    <input type="text" name="niche_name" value="{{ instance.niche_name|default:'' }}" placeholder="e.g. restaurant" required>
+    <label>Region</label>
+    <input type="text" name="region" value="{{ instance.region|default:'' }}" placeholder="e.g. Greater Accra, Ghana" required>
+    <div class="form-actions">
+      <button type="submit" class="btn-primary">Save</button>
+      <a href="{% url 'prospecting' %}" class="btn-secondary">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

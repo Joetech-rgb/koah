@@ -1,0 +1,45 @@
+﻿{% extends "base.html" %}
+{% block title %}{{ thread.subject }}{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div>
+    <a href="{% url 'outreach' %}" class="btn-link">&larr; Back to Outreach</a>
+    <h1>{{ thread.subject }}</h1>
+    <p class="page-subtitle">{{ thread.target_company.name }}</p>
+  </div>
+  <span class="badge badge-status-{{ thread.status }}">{{ thread.get_status_display }}</span>
+</div>
+
+{% if messages %}{% for m in messages %}<div class="alert-{{ m.tags|default:'success' }}">{{ m }}</div>{% endfor %}{% endif %}
+
+<div class="card">
+  <div class="card-header"><h3>Conversation</h3></div>
+  {% for m in thread.messages.all %}
+    <div class="message-row {{ m.direction }}">
+      <span class="message-dir">{{ m.direction|title }}</span>
+      <p>{{ m.body }}</p>
+      <span class="message-time">{{ m.created_at|date:"M d, Y H:i" }}</span>
+    </div>
+  {% empty %}
+    <p class="empty-cell">No messages yet.</p>
+  {% endfor %}
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <h3>Reply</h3>
+    <form method="post" style="display:inline">
+      {% csrf_token %}
+      <button type="submit" name="action" value="generate_ai_reply" class="btn-secondary">Generate AI Reply</button>
+    </form>
+  </div>
+  <form method="post">
+    {% csrf_token %}
+    <textarea name="body" rows="6" class="composer" placeholder="Write a reply...">{% if ai_draft %}{{ ai_draft }}{% endif %}</textarea>
+    <div class="form-actions">
+      <button type="submit" name="action" value="save_draft" class="btn-secondary">Save Draft</button>
+      <button type="submit" name="action" value="send" class="btn-primary" onclick="return confirm('This will actually send a real email through your Gmail account. Continue?');">Send</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

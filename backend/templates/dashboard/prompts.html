@@ -1,0 +1,20 @@
+﻿{% extends "base.html" %}
+{% block title %}Prompts{% endblock %}
+{% block content %}
+<div class="page-header"><div><h1>Prompts</h1><p class="page-subtitle">Versioned prompt templates used by the AI agent.</p></div></div>
+<div class="card">
+  <table class="data-table">
+    <thead><tr><th>Name</th><th>Version</th><th>Status</th><th></th></tr></thead>
+    <tbody>
+      {% for p in prompts %}
+      <tr>
+        <td>{{ p.key }}</td>
+        <td>v{{ p.version }}</td>
+        <td><span class="badge {% if p.is_active %}badge-success{% else %}badge-status-closed{% endif %}">{% if p.is_active %}Active{% else %}Inactive{% endif %}</span></td>
+        <td><a href="{% url 'prompt_toggle' p.pk %}" class="btn-link">{% if p.is_active %}Deactivate{% else %}Activate{% endif %}</a></td>
+      </tr>
+      {% empty %}<tr><td colspan="4" class="empty-cell">No prompt templates yet</td></tr>{% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Job Search{% endblock %}
+{% block content %}
+<div class="page-header"><div><h1>{% if instance %}Edit{% else %}Add{% endif %} Job Search</h1></div></div>
+<div class="card form-card">
+  <form method="post">
+    {% csrf_token %}
+    <label>Role / keywords</label>
+    <input type="text" name="role_query" value="{{ instance.role_query|default:prefill_role }}" placeholder="e.g. virtual assistant, backend developer, customer support" required>
+    <label>Region</label>
+    <input type="text" name="region" value="{{ instance.region|default:prefill_region }}" placeholder="e.g. remote worldwide" required>
+    <div class="form-actions">
+      <button type="submit" class="btn-primary">Save</button>
+      <a href="/jobs/profile/?tab=config" class="btn-secondary">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

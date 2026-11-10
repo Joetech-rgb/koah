@@ -1,0 +1,41 @@
+/* Neumorphism for the landing page only. Remove its <link> in landing.html to roll back. */
+.landing-body {
+  --nm-bg: #EEF0F8; --nm-light: #FFFFFF; --nm-dark: #C9CDE0;
+  --bg: var(--nm-bg); --card: var(--nm-bg); --border: transparent;
+  --dark: #1D1E20; --gray: #6B7280; --purple: #673DE6;
+  --nm-raised: 9px 9px 18px var(--nm-dark), -9px -9px 18px var(--nm-light);
+  --nm-small: 5px 5px 10px var(--nm-dark), -5px -5px 10px var(--nm-light);
+  --nm-inset: inset 5px 5px 10px var(--nm-dark), inset -5px -5px 10px var(--nm-light);
+  background: var(--nm-bg); color: var(--dark);
+}
+.landing-body section, .landing-body .what-section, .landing-body .pitch-section,
+.landing-body .trust-strip, .landing-body .hero2 { background: transparent; }
+
+.landing-nav, .mobile-nav-drawer, .landing-footer2 { background: var(--nm-bg); border: none; box-shadow: var(--nm-small); }
+.landing-nav-center a, .landing-nav-links a:not(.btn-primary) { color: var(--dark); }
+
+.hero-badge, .hero-checks span { background: var(--nm-bg); border: none; box-shadow: var(--nm-small); color: var(--dark); border-radius: 999px; }
+.purple-highlight { color: var(--purple); }
+
+/* Cards raised out of the surface */
+.fd2, .what-item, .pitch-item { background: var(--nm-bg); border: none; border-radius: 28px; box-shadow: var(--nm-raised); }
+.what-item, .pitch-item { padding: 24px; }
+.fd2-sidebar, .fd2-main { background: transparent; }
+.fd2-kpi, .fd2-chart-card, .fd2-agent-card { background: var(--nm-bg); border: none; border-radius: 18px; box-shadow: var(--nm-small); }
+.fd2-nav-item.active { background: var(--nm-bg); box-shadow: var(--nm-inset); border-radius: 12px; color: var(--purple); }
+
+/* Icons and inputs pressed into the surface */
+.what-icon { background: var(--nm-bg); border: none; border-radius: 50%; box-shadow: var(--nm-inset); }
+.fd2-search { background: var(--nm-bg); box-shadow: var(--nm-inset); border: none; border-radius: 14px; }
+.fd2-avatar { box-shadow: var(--nm-small); }
+
+/* Buttons: secondary is neumorphic, primary stays a solid accent so the click target is obvious */
+.btn-secondary { background: var(--nm-bg); color: var(--dark); border: none; border-radius: 16px; box-shadow: var(--nm-small); }
+.btn-secondary:hover { box-shadow: var(--nm-raised); }
+.btn-secondary:active { box-shadow: var(--nm-inset); }
+.btn-primary { background: var(--purple); color: #fff; border: none; border-radius: 16px;
+  box-shadow: 5px 5px 10px var(--nm-dark), -5px -5px 10px var(--nm-light); }
+.btn-primary:hover { filter: brightness(1.06); }
+.btn-primary:active { box-shadow: inset 3px 3px 7px rgba(0,0,0,.3); }
+
+.landing-footer2 { border-radius: 28px 28px 0 0; }

@@ -1,0 +1,62 @@
+﻿{% extends "base.html" %}
+{% block title %}Settings{% endblock %}
+{% block content %}
+<div class="page-header"><div><h1>Settings</h1><p class="page-subtitle">Manage your KoahCloud configuration.</p></div></div>
+
+<div class="settings-layout">
+  <div class="settings-nav">
+    <a href="?tab=general" class="settings-nav-item {% if tab == 'general' %}active{% endif %}">General</a>
+    <a href="?tab=gmail" class="settings-nav-item {% if tab == 'gmail' %}active{% endif %}">Gmail</a>
+    <a href="?tab=ai" class="settings-nav-item {% if tab == 'ai' %}active{% endif %}">AI</a>
+    <a href="?tab=outreach" class="settings-nav-item {% if tab == 'outreach' %}active{% endif %}">Outreach</a>
+    <a href="?tab=notifications" class="settings-nav-item {% if tab == 'notifications' %}active{% endif %}">Notifications</a>
+    <a href="?tab=security" class="settings-nav-item {% if tab == 'security' %}active{% endif %}">Security</a>
+  </div>
+
+  <div class="card settings-content">
+    {% if messages %}{% for m in messages %}<div class="alert-success">{{ m }}</div>{% endfor %}{% endif %}
+
+    {% if tab == "general" %}
+      <form method="post">
+        {% csrf_token %}
+        <label>Company name</label>
+        <input type="text" name="name" value="{{ company.name }}">
+        <label>Description</label>
+        <textarea name="description" rows="3" class="composer">{{ company.description }}</textarea>
+        <label>Based in</label>
+        <input type="text" name="based_in" value="{{ company.based_in }}">
+        <label>Email tone</label>
+        <input type="text" name="email_tone" value="{{ company.email_tone }}" placeholder="e.g. friendly, formal, direct">
+        <div class="form-actions"><button type="submit" class="btn-primary">Save</button></div>
+      </form>
+
+    {% elif tab == "gmail" %}
+      <p><strong>Connection status:</strong>
+        <span class="badge {% if gmail_connected %}badge-success{% else %}badge-status-closed{% endif %}">
+          {% if gmail_connected %}Connected{% else %}Not connected{% endif %}
+        </span>
+      </p>
+      <p class="hint">The sending mailbox is authorized via a one-time OAuth flow. Re-authorization currently requires running the flow again from a Python shell, not from this page.</p>
+
+    {% elif tab == "ai" %}
+      <p><strong>Anthropic API key:</strong>
+        <span class="badge {% if anthropic_configured %}badge-success{% else %}badge-status-closed{% endif %}">
+          {% if anthropic_configured %}Configured{% else %}Not configured{% endif %}
+        </span>
+      </p>
+      <p class="hint">The AI key is set in your .env file, not editable from this page for security reasons.</p>
+
+    {% elif tab == "outreach" %}
+      <p><strong>Send rate limit:</strong> {{ rate_limit }} emails per hour</p>
+      <p class="hint">This value is set via SEND_RATE_LIMIT_PER_HOUR in your .env file.</p>
+
+    {% elif tab == "notifications" %}
+      <p><strong>Daily digest recipient:</strong> {{ report_email }}</p>
+      <p class="hint">This is set via REPORT_RECIPIENT_EMAIL in your .env file.</p>
+
+    {% else %}
+      <p class="hint" style="font-size:13px;">This dashboard currently has no login requirement - anyone who can reach this URL can view and edit everything. This is fine for local development on your own machine, but should be addressed with real authentication before this is ever exposed beyond it.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,25 @@
+﻿{% extends "base.html" %}
+{% block title %}Skill{% endblock %}
+{% block content %}
+<div class="page-header"><div><h1>{% if instance %}Edit{% else %}Add{% endif %} Skill</h1></div></div>
+<div class="card form-card">
+  <form method="post">
+    {% csrf_token %}
+    <label>Skill name</label>
+    <input type="text" name="name" value="{{ instance.name|default:'' }}" required>
+    <label>Proficiency</label>
+    <select name="proficiency" class="filter-select" style="width:100%;">
+      <option value="beginner" {% if instance.proficiency == "beginner" %}selected{% endif %}>Beginner</option>
+      <option value="intermediate" {% if instance.proficiency == "intermediate" or not instance %}selected{% endif %}>Intermediate</option>
+      <option value="advanced" {% if instance.proficiency == "advanced" %}selected{% endif %}>Advanced</option>
+      <option value="expert" {% if instance.proficiency == "expert" %}selected{% endif %}>Expert</option>
+    </select>
+    <label>Years of experience with this skill</label>
+    <input type="number" name="years" value="{{ instance.years|default:'0' }}" min="0">
+    <div class="form-actions">
+      <button type="submit" class="btn-primary">Save</button>
+      <a href="/jobs/profile/?tab=skills" class="btn-secondary">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

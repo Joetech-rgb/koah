@@ -1,0 +1,33 @@
+﻿{% extends "base.html" %}
+{% block title %}{{ item_type }}{% endblock %}
+{% block content %}
+<div class="page-header"><div><h1>{% if instance %}Edit{% else %}Add{% endif %} {{ item_type }}</h1></div></div>
+<div class="card form-card">
+  <form method="post">
+    {% csrf_token %}
+    {% if is_portfolio %}
+      <label>Title</label>
+      <input type="text" name="title" value="{{ instance.title|default:'' }}" required>
+      <label>Summary</label>
+      <textarea name="summary" rows="4" class="composer">{{ instance.summary|default:'' }}</textarea>
+    {% else %}
+      <label>Name</label>
+      <input type="text" name="name" value="{{ instance.name|default:'' }}" required>
+      <label>Description</label>
+      <textarea name="description" rows="4" class="composer">{{ instance.description|default:'' }}</textarea>
+      {% if show_price %}
+        <label>Price Note</label>
+        <input type="text" name="price_note" value="{{ instance.price_note|default:'' }}" placeholder="e.g. from $500">
+      {% endif %}
+      {% if show_target_signal %}
+        <label>Target Signal</label>
+        <input type="text" name="target_signal" value="{{ instance.target_signal|default:'' }}" placeholder="e.g. no website detected">
+      {% endif %}
+    {% endif %}
+    <div class="form-actions">
+      <button type="submit" class="btn-primary">Save</button>
+      <a href="{{ back_url }}" class="btn-secondary">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,25 @@
+﻿{% extends "base.html" %}
+{% block title %}Add Company{% endblock %}
+{% block content %}
+<div class="page-header"><div><h1>Add Company</h1><p class="page-subtitle">Manually add a business to your CRM.</p></div></div>
+<div class="card form-card">
+  {% if messages %}{% for m in messages %}<div class="alert-success">{{ m }}</div>{% endfor %}{% endif %}
+  <form method="post">
+    {% csrf_token %}
+    <label>Company name</label>
+    <input type="text" name="name" required>
+    <label>Domain</label>
+    <input type="text" name="domain" placeholder="example.com">
+    <label>Country</label>
+    <input type="text" name="country">
+    <label>Industry</label>
+    <input type="text" name="industry">
+    <label>Contact email</label>
+    <input type="email" name="contact_email">
+    <div class="form-actions">
+      <button type="submit" class="btn-primary">Save Company</button>
+      <a href="{% url 'companies' %}" class="btn-secondary">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

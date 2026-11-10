@@ -1,0 +1,43 @@
+﻿{% extends "base.html" %}
+{% block title %}Outreach{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div><h1>Outreach</h1><p class="page-subtitle">Manage email conversations with prospects.</p></div>
+</div>
+
+<div class="tabs">
+  <a href="{% url 'outreach' %}" class="tab {% if not status_filter %}active{% endif %}">All <span>{{ counts.all }}</span></a>
+  <a href="?status=drafted" class="tab {% if status_filter == 'drafted' %}active{% endif %}">Drafted <span>{{ counts.drafted }}</span></a>
+  <a href="?status=sent" class="tab {% if status_filter == 'sent' %}active{% endif %}">Sent <span>{{ counts.sent }}</span></a>
+  <a href="?status=replied" class="tab {% if status_filter == 'replied' %}active{% endif %}">Replied <span>{{ counts.replied }}</span></a>
+  <a href="?status=interested" class="tab {% if status_filter == 'interested' %}active{% endif %}">Interested <span>{{ counts.interested }}</span></a>
+  <a href="?status=closed" class="tab {% if status_filter == 'closed' %}active{% endif %}">Closed <span>{{ counts.closed }}</span></a>
+</div>
+
+<div class="card">
+  <table class="data-table">
+    <thead><tr><th>Company</th><th>Subject</th><th>Status</th><th>Classification</th><th>Last Activity</th><th></th></tr></thead>
+    <tbody>
+      {% for t in page_obj %}
+      <tr>
+        <td>{{ t.target_company.name }}</td>
+        <td>{{ t.subject }}</td>
+        <td><span class="badge badge-status-{{ t.status }}">{{ t.get_status_display }}</span></td>
+        <td>{{ t.classification|default:"-" }}</td>
+        <td>{{ t.created_at|timesince }} ago</td>
+        <td><a href="{% url 'thread_detail' t.pk %}" class="btn-link">Open</a></td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="6" class="empty-cell">No email threads yet</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% if page_obj.paginator.num_pages > 1 %}
+  <div class="pagination">
+    {% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}&status={{ status_filter }}">&laquo; Prev</a>{% endif %}
+    <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+    {% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}&status={{ status_filter }}">Next &raquo;</a>{% endif %}
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
